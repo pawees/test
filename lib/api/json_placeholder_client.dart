@@ -1,0 +1,116 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+import 'package:test_task/feature/domain/i_datasource/i_datasource.dart';
+
+import '../feature/datasource/_dto/post/comment.dart';
+import '../feature/datasource/_dto/post.dart';
+import '../feature/domain/i_datasource/api_result.dart';
+
+class PostDetailsNotFoundFailure implements Exception {}
+
+class PostsNotFoundFailure implements Exception {}
+
+/// Exception thrown when locationSearch fails.
+class LocationRequestFailure implements Exception {}
+
+class StatusCodeRequestFailure implements Exception {}
+
+/// Exception thrown when the provided location is not found.
+class LocationNotFoundFailure implements Exception {}
+
+/// Exception thrown when getWeather fails.
+class WeatherRequestFailure implements Exception {}
+
+/// Exception thrown when weather for provided location is not found.
+class WeatherNotFoundFailure implements Exception {}
+
+/// {@template open_meteo_api_client}
+/// Dart API Client which wraps the [Open Meteo API](https://open-meteo.com).
+/// {@endtemplate}
+class JsonPlaceholderApiClient implements IApiClient {
+  /// {@macro open_meteo_api_client}
+  JsonPlaceholderApiClient({http.Client? httpClient})
+      : _httpClient = httpClient ?? http.Client();
+
+  static const _baseUrl = 'jsonplaceholder.typicode.com';
+
+  final http.Client _httpClient;
+
+  @override
+  Future<ApiResult<List<Post>>> getPosts() async {
+    final postsRequest = Uri.https(
+      _baseUrl,
+      '/posts',
+      //{'name': query, 'count': '1'},
+    );
+    try {
+      final response = await _httpClient.get(postsRequest);
+
+      if (response.statusCode != 200) {
+        throw Failed(StatusCodeRequestFailure());
+      }
+      final locationJson = jsonDecode(response.body) as Map;
+
+      if (!locationJson.containsKey('results')) throw LocationNotFoundFailure();
+
+      final results = locationJson['results'] as List<Post>;
+
+      if (results.isEmpty) throw PostsNotFoundFailure();
+
+      return Success(results);
+    } on Exception catch (e, st) {
+      return Failed(e);
+    }
+  }
+
+  @override
+  Future<ApiResult<Post>> getDetails(int id) async {
+    try {
+      final request = Uri.https(_baseUrl, '/posts/$id', {});
+      final response = await _httpClient.get(request);
+
+      if (response.statusCode != 200) {
+        throw Failed(StatusCodeRequestFailure());
+      }
+
+      final bodyJson = jsonDecode(response.body) as Map<String, dynamic>;
+
+      if (!bodyJson.containsKey('current_weather')) {
+        throw PostDetailsNotFoundFailure();
+      }
+
+      final weatherJson = bodyJson['current_weather'] as Map<String, dynamic>;
+
+      return Success(Post.fromJson(weatherJson));
+    } on Exception catch (e, st) {
+      return Failed(e);
+    }
+  }
+
+  @override
+  Future<ApiResult<Comment>> getComment(int id) async {
+    try {
+      final request = Uri.https(_baseUrl, '/posts/$id/comments', {});
+
+      final response = await _httpClient.get(request);
+
+      if (response.statusCode != 200) {
+        throw StatusCodeRequestFailure();
+      }
+
+      final bodyJson = jsonDecode(response.body) as Map<String, dynamic>;
+
+      // if (!bodyJson.containsKey('current_weather')) {
+      //   throw WeatherNotFoundFailure();
+      // }
+
+      final weatherJson = bodyJson['current_weather'] as Map<String, dynamic>;
+
+      return Success(Comment.fromJson(weatherJson));
+    } on Exception catch (e, st) {
+      return Failed(e);
+    }
+  }
+}
