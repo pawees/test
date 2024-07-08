@@ -18,20 +18,20 @@ extension PostsStatusX on PostsStatus {
 final class PostsState extends Equatable {
   PostsState( {
     this.status = PostsStatus.initial,
-    PostsEntity? posts,
-  }) : posts = posts ?? PostsEntity.empty;
+    required List<PostDetailedEntity> posts,
+  }) : posts = posts;
 
 
   final PostsStatus status;
-  final PostsEntity posts;
+  final List<PostDetailedEntity> posts;
 
   PostsState copyWith({
     PostsStatus? status,
-    PostsEntity? posts,
+    required List<PostDetailedEntity> posts,
   }) {
     return PostsState(
       status: status ?? this.status,
-      posts: posts ?? this.posts,
+      posts: posts,
     );
   }
 

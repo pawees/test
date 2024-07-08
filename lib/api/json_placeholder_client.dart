@@ -68,7 +68,7 @@ class JsonPlaceholderApiClient implements IApiClient {
   @override
   Future<ApiResult<Post>> getDetails(int id) async {
     try {
-      final request = Uri.https(_baseUrl, '/posts/$id', {});
+      final request = Uri.https(_baseUrl, '/posts/1', {});
       final response = await _httpClient.get(request);
 
       if (response.statusCode != 200) {

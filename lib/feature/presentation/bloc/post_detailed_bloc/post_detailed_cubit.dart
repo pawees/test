@@ -16,7 +16,9 @@ class PostDetailedCubit extends Cubit<PostDetailedState> {
   ///TODO find state othe bloc and returned
   ///    if (!state.status.isSuccess) return;
   ///     if (state.weather == Weather.empty) return;
+  emit(state.copyWith(status: PostsStatus.loading,));
 
+  await Future.delayed(Duration(seconds: 1));
   try {
     final details = await _postsRepository.getDetails(id);
     emit(

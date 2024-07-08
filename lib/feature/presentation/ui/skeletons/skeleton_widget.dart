@@ -22,7 +22,7 @@ class SkeletonWidget extends StatelessWidget {
       height: height,
       decoration: BoxDecoration(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(radius ?? 24),
+       // borderRadius: BorderRadius.circular(radius ?? 24),
       ),
       child: Shimmer(
         enabled: true,
@@ -61,7 +61,7 @@ class SkeletonContainer extends StatelessWidget {
       width: width,
       decoration: BoxDecoration(
         color: Colors.green,
-        borderRadius: BorderRadius.circular(radius ?? 24),
+        // borderRadius: BorderRadius.circular(radius ?? 24),
       ),
     );
   }
