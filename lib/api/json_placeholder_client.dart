@@ -12,25 +12,13 @@ class PostDetailsNotFoundFailure implements Exception {}
 
 class PostsNotFoundFailure implements Exception {}
 
-/// Exception thrown when locationSearch fails.
-class LocationRequestFailure implements Exception {}
 
 class StatusCodeRequestFailure implements Exception {}
 
-/// Exception thrown when the provided location is not found.
-class LocationNotFoundFailure implements Exception {}
 
-/// Exception thrown when getWeather fails.
-class WeatherRequestFailure implements Exception {}
 
-/// Exception thrown when weather for provided location is not found.
-class WeatherNotFoundFailure implements Exception {}
 
-/// {@template open_meteo_api_client}
-/// Dart API Client which wraps the [Open Meteo API](https://open-meteo.com).
-/// {@endtemplate}
 class JsonPlaceholderApiClient implements IApiClient {
-  /// {@macro open_meteo_api_client}
   JsonPlaceholderApiClient({http.Client? httpClient})
       : _httpClient = httpClient ?? http.Client();
 
@@ -52,7 +40,6 @@ class JsonPlaceholderApiClient implements IApiClient {
       }
       final locationJson = jsonDecode(response.body) as List<dynamic>;
 
-      if (locationJson.isEmpty) throw LocationNotFoundFailure();
 
       final results = locationJson.map((map) => Post.fromJson(map)).toList();
 
