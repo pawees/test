@@ -13,7 +13,7 @@ Comment _$CommentFromJson(Map<String, dynamic> json) => $checkedCreate(
       json,
       ($checkedConvert) {
         final val = Comment(
-          postId: $checkedConvert('post_id', (v) => (v as num).toInt()),
+          postId: $checkedConvert('postId', (v) => (v as num).toInt()),
           id: $checkedConvert('id', (v) => (v as num).toInt()),
           name: $checkedConvert('name', (v) => v as String),
           body: $checkedConvert('body', (v) => v as String),
@@ -21,5 +21,4 @@ Comment _$CommentFromJson(Map<String, dynamic> json) => $checkedCreate(
         );
         return val;
       },
-      fieldKeyMap: const {'postId': 'post_id'},
     );

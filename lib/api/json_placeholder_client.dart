@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:test_task/feature/datasource/_dto/comment.dart';
 import 'package:test_task/feature/domain/i_datasource/i_datasource.dart';
 
-import '../feature/datasource/_dto/post/comment.dart';
 import '../feature/datasource/_dto/post.dart';
 import '../feature/domain/i_datasource/api_result.dart';
 
@@ -43,7 +43,6 @@ class JsonPlaceholderApiClient implements IApiClient {
     final postsRequest = Uri.https(
       _baseUrl,
       '/posts',
-      //{'name': query, 'count': '1'},
     );
     try {
       final response = await _httpClient.get(postsRequest);
@@ -51,15 +50,16 @@ class JsonPlaceholderApiClient implements IApiClient {
       if (response.statusCode != 200) {
         throw Failed(StatusCodeRequestFailure());
       }
-      final locationJson = jsonDecode(response.body) as Map;
+      final locationJson = jsonDecode(response.body) as List<dynamic>;
 
-      if (!locationJson.containsKey('results')) throw LocationNotFoundFailure();
+      if (locationJson.isEmpty) throw LocationNotFoundFailure();
 
-      final results = locationJson['results'] as List<Post>;
+      final results = locationJson.map((map) => Post.fromJson(map)).toList();
 
       if (results.isEmpty) throw PostsNotFoundFailure();
 
       return Success(results);
+
     } on Exception catch (e, st) {
       return Failed(e);
     }
@@ -77,20 +77,18 @@ class JsonPlaceholderApiClient implements IApiClient {
 
       final bodyJson = jsonDecode(response.body) as Map<String, dynamic>;
 
-      if (!bodyJson.containsKey('current_weather')) {
+      if (!bodyJson.containsKey('id')) {
         throw PostDetailsNotFoundFailure();
       }
 
-      final weatherJson = bodyJson['current_weather'] as Map<String, dynamic>;
-
-      return Success(Post.fromJson(weatherJson));
+      return Success(Post.fromJson(bodyJson));
     } on Exception catch (e, st) {
       return Failed(e);
     }
   }
 
   @override
-  Future<ApiResult<Comment>> getComment(int id) async {
+  Future<ApiResult<List<Comment>>> getComment(int id) async {
     try {
       final request = Uri.https(_baseUrl, '/posts/$id/comments', {});
 
@@ -100,15 +98,14 @@ class JsonPlaceholderApiClient implements IApiClient {
         throw StatusCodeRequestFailure();
       }
 
-      final bodyJson = jsonDecode(response.body) as Map<String, dynamic>;
+      final bodyJson = jsonDecode(response.body) as List<dynamic>;
 
-      // if (!bodyJson.containsKey('current_weather')) {
-      //   throw WeatherNotFoundFailure();
-      // }
 
-      final weatherJson = bodyJson['current_weather'] as Map<String, dynamic>;
+      final results = bodyJson.map((map) => Comment.fromJson(map)).toList();
 
-      return Success(Comment.fromJson(weatherJson));
+      if (results.isEmpty) throw PostsNotFoundFailure();
+
+      return Success(results);
     } on Exception catch (e, st) {
       return Failed(e);
     }

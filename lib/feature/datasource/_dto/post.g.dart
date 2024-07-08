@@ -16,9 +16,8 @@ Post _$PostFromJson(Map<String, dynamic> json) => $checkedCreate(
           id: $checkedConvert('id', (v) => (v as num).toInt()),
           title: $checkedConvert('title', (v) => v as String),
           body: $checkedConvert('body', (v) => v as String),
-          userId: $checkedConvert('user_id', (v) => (v as num).toInt()),
+          userId: $checkedConvert('userId', (v) => (v as num).toInt()),
         );
         return val;
       },
-      fieldKeyMap: const {'userId': 'user_id'},
     );

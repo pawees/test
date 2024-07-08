@@ -18,8 +18,8 @@ class AllPostsView extends StatefulWidget {
 }
 
 //TODO skeletons
-//TODO cached
-//TODO issues and entry point
+//TODO cached+
+//TODO entry point
 
 class AllPostsViewState extends State<AllPostsView> {
   @override

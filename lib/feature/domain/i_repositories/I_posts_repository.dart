@@ -1,10 +1,10 @@
-import 'package:test_task/feature/domain/entities/posts_entity.dart';
-
+import 'dart:async';
+import 'package:test_task/feature/datasource/_dto/comment.dart';
 import '../entities/post_detailed_entity.dart';
 
 
 abstract class IPostsRepository {
-  Future<PostsEntity> getPosts();
-  Future<PostDetailedEntity> getDetails(int post);
-
+ Future<List<PostDetailedEntity>> getPosts();
+  FutureOr<PostDetailedEntity> getDetails(int post);
+  Future<List<Comment>> getComments(int id);
 }

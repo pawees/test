@@ -1,26 +1,14 @@
-class PostsMapper {
+import 'package:test_task/feature/domain/entities/comment_entity.dart';
+import 'package:test_task/feature/domain/entities/post_detailed_entity.dart';
 
-  static Items fromDTO(ItemsResponse dto, [itemData]) {
-    return Items(
-      title: dto.title,
-      description: dto.description,
-      previewImg: itemData,
-      id: dto.id,
-      category: dto.category.toCategory,
+class PostMapper {
+  static PostDetailedEntity fromDTO(data, [comments]) {
+
+    return PostDetailedEntity(
+      imageUrl: 'https://placehold.co/600x400/png',
+      title: data.title,
+      comments: comments ?? [],
+      body: data.body,
     );
   }
-
-}
-
-class PostDetailsMapper {
-  static Items fromDTO(ItemsResponse dto, [itemData]) {
-    return Items(
-      imageUrl: '',
-      description: dto.description,
-      previewImg: itemData,
-      id: dto.id,
-      comments: dto.category.toCategory,
-    );
-  }
-
 }

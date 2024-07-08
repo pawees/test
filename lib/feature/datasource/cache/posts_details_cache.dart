@@ -1,18 +1,27 @@
+import 'package:test_task/feature/domain/entities/post_detailed_entity.dart';
+
 import '../../domain/i_datasource/i_cache_datasource.dart';
 
 class PostDetailsCache implements IPostDetailsCache {
-  final Map<int, Map<String, dynamic>> _cache = {};
+  final Map<int, PostDetailedEntity> _cache = {};
 
-  // Именованный конструктор empty
-  PostDetailsCache.empty();
-
-  @override
-  Map<String, dynamic>? getDetailedPost(int postId) {
-    return _cache[postId];
+  bool isContains( key) {
+    return _cache.containsKey(key);
   }
 
   @override
-  void setDetailedPost(int postId, Map<String, dynamic> postDetails) {
+   PostDetailedEntity empty()  {
+    return  PostDetailedEntity.empty;
+  }
+
+
+  @override
+  PostDetailedEntity? getDetailedPost(int postId)  {
+    return  _cache[postId];
+  }
+
+  @override
+  void setDetailedPost(int postId, PostDetailedEntity postDetails) {
     _cache[postId] = postDetails;
   }
 

@@ -25,13 +25,11 @@ class PostsCubit extends Cubit<PostsState> {
       emit(
         state.copyWith(
           status: PostsStatus.success,
-          posts: posts,
+          //posts: posts,
         ),
       );
     } on Exception {
       emit(state.copyWith(status: PostsStatus.failure));
     }
   }
-
-
 }
